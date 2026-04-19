@@ -19,7 +19,7 @@ class Config:
 
     TRANSFORMS_DICT = {
         "train": transforms.Compose([
-            transforms.Resize((IMG_SIZE, IMG_SIZE)),              # standard input size
+            transforms.Resize((IMG_SIZE, IMG_SIZE)),             
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomRotation(15),
             transforms.RandomResizedCrop(IMG_SIZE, scale=(0.8, 1.0)),
