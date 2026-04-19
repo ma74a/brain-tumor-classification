@@ -1,5 +1,8 @@
 
 data
+checkpoints
+cm.png
+loss_plot.png
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

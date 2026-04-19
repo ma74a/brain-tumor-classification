@@ -1,5 +1,7 @@
+import os
 import torch
 from torchvision import transforms
+
 
 class Config:
     TRAIN_PATH = "/home/etman/etman/python/projects/brain_tumor_classification/data/Training"
@@ -9,17 +11,17 @@ class Config:
     EPOCHS = 50
     LR = 0.0001
     BATCH_SIZE = 32
-
+    NUM_WORKERS = 4
 
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-    IMG_SIZE = 512
+    IMG_SIZE = 224
     NUM_CLASSES = 4
     CLASSES_NAMES = ['glioma', 'meningioma', 'notumor', 'pituitary']
 
     TRANSFORMS_DICT = {
         "train": transforms.Compose([
-            transforms.Resize((IMG_SIZE, IMG_SIZE)),             
+            transforms.Resize((IMG_SIZE, IMG_SIZE)),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomRotation(15),
             transforms.RandomResizedCrop(IMG_SIZE, scale=(0.8, 1.0)),

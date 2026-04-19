@@ -10,6 +10,8 @@ def train_and_val(model,
                   criterion,
                   device="cpu",
                   epochs=30):
+    last_epoch_preds = []
+    last_epoch_labels = []
     best_val_loss = float("inf")
     train_losses = []
     val_losses = []
@@ -43,8 +45,7 @@ def train_and_val(model,
         running_val_loss = 0
         correct_val = 0
         total_val = 0
-        last_epoch_preds = []
-        last_epoch_labels = []
+        
         model.eval()
         with torch.no_grad():
             for imgs, labels in tqdm(val_loader):
@@ -54,9 +55,13 @@ def train_and_val(model,
                 loss = criterion(output, labels)
 
                 running_val_loss += loss.item()
-                preds = output.agrmax(dim=1)
+                preds = output.argmax(dim=1)
                 correct_val += (preds == labels).sum().item()
                 total_val += labels.size(0)
+
+                if epoch == epochs - 1:
+                    last_epoch_preds.extend(preds.cpu().numpy())
+                    last_epoch_labels.extend(labels.cpu().numpy())
 
             val_loss = running_val_loss / len(val_loader)
             val_acc = correct_val / total_val
@@ -64,9 +69,6 @@ def train_and_val(model,
             val_losses.append(val_loss)
             val_accuracies.append(val_acc)
 
-            if epoch == epochs - 1:
-                last_epoch_preds.append(preds.numpy().cpu())
-                last_epoch_labels.append(labels.numpy().cpu())
 
             if best_val_loss > val_loss:
                 best_val_loss = val_loss
@@ -80,7 +82,7 @@ def train_and_val(model,
                 
         print(f"epoch: {epoch+1} | train_loss: {train_loss} | val_loss: {val_loss}")
 
-        cm = confusion_matrix(last_epoch_labels, last_epoch_preds)
+    cm = confusion_matrix(last_epoch_labels, last_epoch_preds)
 
     return model, train_losses, train_accuracies, val_losses, val_accuracies, cm
 
