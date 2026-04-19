@@ -38,6 +38,7 @@ class Config:
         ]),
         "val": transforms.Compose([
             transforms.Resize((IMG_SIZE, IMG_SIZE)),
+            transforms.Grayscale(num_output_channels=3),
             transforms.ToTensor(),
             transforms.Normalize(
                 mean=[0.485, 0.456, 0.406],
